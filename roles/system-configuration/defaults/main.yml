@@ -1,0 +1,4 @@
+---
+hostname: archbox
+timezone: "{{ timezone | default('Europe/Vienna') }}"
+user: "{{ user }}"

@@ -1,0 +1,23 @@
+---
+- name: Create standard home directories
+  ansible.builtin.file:
+    path: "/home/{{ user }}/{{ item }}"
+    state: directory
+    owner: "{{ user }}"
+    mode: "0755"
+  loop: "{{ home_directories }}"
+  when: ansible_os_family != "Darwin"
+  tags:
+    - directories
+
+- name: Create standard home directories (macOS)
+  ansible.builtin.file:
+    path: "/Users/{{ user }}/{{ item }}"
+    state: directory
+    owner: "{{ user }}"
+    mode: "0755"
+  loop: "{{ home_directories }}"
+  when: ansible_os_family == "Darwin"
+  become: false
+  tags:
+    - directories

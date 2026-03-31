@@ -1,0 +1,42 @@
+---
+enable_nvidia: false
+enable_amd: false
+use_nvidia_dkms: true
+
+nvidia_packages:
+  - linux-headers
+  - nvidia-utils
+  - nvidia-settings
+  - egl-wayland
+  - libva-nvidia-driver
+  - mesa
+  - vulkan-icd-loader
+
+nvidia_lib32_packages:
+  - lib32-nvidia-utils
+  - lib32-vulkan-icd-loader
+  - lib32-opencl-nvidia
+
+nvidia_dkms_package: nvidia-open-dkms
+nvidia_non_dkms_package: nvidia-open
+
+nvidia_kernel_params:
+  - nvidia_drm.modeset=1
+  - nvidia_drm.fbdev=1
+
+nvidia_initramfs_modules:
+  - nvidia
+  - nvidia_modeset
+  - nvidia_uvm
+  - nvidia_drm
+
+amd_packages:
+  - mesa
+  - vulkan-radeon
+  - libva-mesa-driver
+  - vulkan-icd-loader
+
+amd_lib32_packages:
+  - lib32-mesa
+  - lib32-vulkan-radeon
+  - lib32-vulkan-icd-loader

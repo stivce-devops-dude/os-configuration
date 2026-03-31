@@ -1,0 +1,15 @@
+---
+- name: Ensure zsh is installed
+  ansible.builtin.package:
+    name: zsh
+    state: present
+
+- name: Set root shell to zsh
+  ansible.builtin.user:
+    name: root
+    shell: /bin/zsh
+
+- name: Set user shell to zsh
+  ansible.builtin.user:
+    name: "{{ user }}"
+    shell: /bin/zsh

@@ -1,0 +1,12 @@
+---
+- name: Install Wayland and Hyprland packages
+  ansible.builtin.import_tasks: wayland.yml
+  tags:
+    - hyprland
+    - wayland
+
+- name: Configure ly display manager
+  ansible.builtin.import_tasks: ly.yml
+  tags:
+    - hyprland
+    - ly

@@ -1,0 +1,14 @@
+---
+- name: Run NVIDIA GPU setup
+  ansible.builtin.import_tasks: nvidia.yml
+  when: enable_nvidia | bool
+  tags:
+    - gpu
+    - nvidia
+
+- name: Run AMD GPU setup
+  ansible.builtin.import_tasks: amd.yml
+  when: enable_amd | bool
+  tags:
+    - gpu
+    - amd

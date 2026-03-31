@@ -1,0 +1,61 @@
+---
+- name: Verify GPU role has been applied
+  ansible.builtin.assert:
+    that:
+      - enable_nvidia | bool or enable_amd | bool
+    fail_msg: >
+      packages-gaming requires the gpu role. Ensure enable_nvidia or enable_amd
+      is set to true for this host before applying the gaming role.
+  tags:
+    - gaming
+
+- name: Install Wine and Proton packages
+  community.general.pacman:
+    name: "{{ gaming_wine_packages }}"
+    state: present
+  tags:
+    - gaming
+
+- name: Install Wine library dependencies (requires multilib)
+  community.general.pacman:
+    name: "{{ gaming_wine_lib_packages }}"
+    state: present
+  when: not ansible_check_mode
+  tags:
+    - gaming
+
+- name: Install gaming tools
+  community.general.pacman:
+    name: "{{ gaming_tool_packages }}"
+    state: present
+  tags:
+    - gaming
+
+- name: Install gaming multilib packages (requires multilib)
+  community.general.pacman:
+    name: "{{ gaming_multilib_packages }}"
+    state: present
+  when: not ansible_check_mode
+  tags:
+    - gaming
+
+- name: Install gaming AUR packages
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.command: "yay -S --noconfirm --needed {{ gaming_aur_packages | join(' ') }}"
+  register: aur_gaming_result
+  changed_when: "'installing' in aur_gaming_result.stdout"
+  when: not ansible_check_mode
+  tags:
+    - gaming
+
+- name: Enable gamemode globally
+  ansible.builtin.systemd:
+    name: gamemoded
+    enabled: true
+    scope: user
+  become: true
+  become_user: "{{ user }}"
+  when: not ansible_check_mode
+  tags:
+    - gaming

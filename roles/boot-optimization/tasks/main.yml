@@ -1,0 +1,17 @@
+---
+- name: Mask unused systemd services
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: false
+    masked: true
+  loop:
+    - systemd-resolved.service
+  tags:
+    - boot
+
+- name: Disable NetworkManager-wait-online
+  ansible.builtin.systemd:
+    name: NetworkManager-wait-online.service
+    enabled: false
+  tags:
+    - boot

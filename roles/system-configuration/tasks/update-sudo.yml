@@ -1,0 +1,18 @@
+---
+- name: Ensure wheel group exists
+  ansible.builtin.group:
+    name: wheel
+    state: present
+
+- name: Add user to wheel group
+  ansible.builtin.user:
+    name: "{{ user }}"
+    groups: wheel
+    append: true
+
+- name: Configure passwordless sudo for wheel
+  ansible.builtin.copy:
+    content: "%wheel ALL=(ALL:ALL) NOPASSWD: ALL\n"
+    dest: /etc/sudoers.d/wheel
+    mode: '0440'
+    validate: "/usr/sbin/visudo -cf %s"

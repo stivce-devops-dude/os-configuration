@@ -1,0 +1,61 @@
+---
+- name: Install NVIDIA driver (DKMS)
+  community.general.pacman:
+    name: "{{ nvidia_dkms_package }}"
+    state: present
+  when: use_nvidia_dkms | bool
+
+- name: Install NVIDIA driver (non-DKMS)
+  community.general.pacman:
+    name: "{{ nvidia_non_dkms_package }}"
+    state: present
+  when: not (use_nvidia_dkms | bool)
+
+- name: Install NVIDIA packages
+  community.general.pacman:
+    name: "{{ nvidia_packages }}"
+    state: present
+
+- name: Install NVIDIA lib32 packages (requires multilib)
+  community.general.pacman:
+    name: "{{ nvidia_lib32_packages }}"
+    state: present
+  when: not ansible_check_mode
+
+- name: Add NVIDIA modules to initramfs
+  ansible.builtin.replace:
+    path: /etc/mkinitcpio.conf
+    regexp: '^MODULES=\(.*\)'
+    replace: "MODULES=({{ nvidia_initramfs_modules | join(' ') }})"
+  notify: Regenerate initramfs
+
+- name: Get current GRUB kernel parameters
+  ansible.builtin.slurp:
+    src: /etc/default/grub
+  register: grub_content
+
+- name: Add NVIDIA kernel parameters to GRUB
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
+    line: >-
+      GRUB_CMDLINE_LINUX_DEFAULT="quiet {{ nvidia_kernel_params | join(' ') }}"
+    mode: '0644'
+  notify: Regenerate GRUB config
+
+- name: DKMS known issue — kernel 6.19+ compatibility warning
+  ansible.builtin.debug:
+    msg: >
+      WARNING: If using kernel 6.19+, ensure your NVIDIA DKMS driver version
+      supports it. Check https://wiki.archlinux.org/title/NVIDIA for known
+      build issues. If DKMS build fails, try switching to nvidia-open
+      (set use_nvidia_dkms: false).
+  when: use_nvidia_dkms | bool
+
+- name: DKMS known issue — rebuild reminder
+  ansible.builtin.debug:
+    msg: >
+      NOTE: After kernel upgrades, DKMS should auto-rebuild the NVIDIA module.
+      If you experience boot issues, run 'dkms autoinstall' manually or
+      switch to the non-DKMS package (nvidia-open).
+  when: use_nvidia_dkms | bool

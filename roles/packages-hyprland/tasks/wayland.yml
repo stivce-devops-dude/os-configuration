@@ -1,0 +1,91 @@
+---
+- name: Install Hyprland core packages
+  community.general.pacman:
+    name: "{{ hyprland_packages }}"
+    state: present
+
+- name: Install Wayland utility packages
+  community.general.pacman:
+    name: "{{ wayland_packages }}"
+    state: present
+
+- name: Install audio packages (PipeWire)
+  community.general.pacman:
+    name: "{{ audio_packages }}"
+    state: present
+
+- name: Enable PipeWire user services
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+    scope: user
+  loop:
+    - pipewire.service
+    - pipewire-pulse.service
+    - wireplumber.service
+  become: true
+  become_user: "{{ user }}"
+  when: not ansible_check_mode
+
+- name: Install input and media packages
+  community.general.pacman:
+    name: "{{ input_media_packages }}"
+    state: present
+
+- name: Install file manager
+  community.general.pacman:
+    name: "{{ file_manager_packages }}"
+    state: present
+
+- name: Install fonts
+  community.general.pacman:
+    name: "{{ font_packages }}"
+    state: present
+
+- name: Install theme packages (pacman)
+  community.general.pacman:
+    name: "{{ theme_packages }}"
+    state: present
+
+- name: Install Qt Wayland support
+  community.general.pacman:
+    name: "{{ qt_packages }}"
+    state: present
+
+# AUR packages (via yay)
+- name: Install Hyprland AUR packages
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.command: "yay -S --noconfirm --needed --answerdiff None --answerclean None {{ aur_hyprland_packages | join(' ') }}"
+  register: aur_hyprland_result
+  changed_when: "'installing' in aur_hyprland_result.stdout"
+  when: not ansible_check_mode
+
+- name: Install theme AUR packages
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.command: "yay -S --noconfirm --needed --cleanafter --cleanbuild {{ item }}"
+  register: aur_theme_result
+  changed_when: "'installing' in aur_theme_result.stdout"
+  failed_when: false
+  loop: "{{ aur_theme_packages }}"
+  when: not ansible_check_mode
+
+- name: Warn about failed theme AUR packages
+  ansible.builtin.debug:
+    msg: "WARNING: {{ item.item }} failed to install via yay. You may need to install it manually."
+  loop: "{{ aur_theme_result.results | default([]) }}"
+  loop_control:
+    label: "{{ item.item | default('unknown') }}"
+  when:
+    - not ansible_check_mode
+    - item.rc is defined and item.rc != 0
+
+- name: Install browser AUR packages
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.command: "yay -S --noconfirm --needed {{ aur_browser_packages | join(' ') }}"
+  register: aur_browser_result
+  changed_when: "'installing' in aur_browser_result.stdout"
+  when: not ansible_check_mode

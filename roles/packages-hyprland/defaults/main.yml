@@ -1,0 +1,64 @@
+---
+hyprland_packages:
+  - hyprland
+  - xdg-desktop-portal-hyprland
+  - hyprlock
+  - hypridle
+  - hyprshot
+  - hyprpolkitagent
+
+wayland_packages:
+  - waybar
+  - fuzzel
+  - swaync
+  - swappy
+  - wdisplays
+  - grim
+  - slurp
+  - wl-clipboard
+  - libnotify
+  - xsettingsd
+  - matugen
+  - awww
+
+audio_packages:
+  - pipewire
+  - pipewire-pulse
+  - wireplumber
+  - pavucontrol
+  - pamixer
+
+input_media_packages:
+  - brightnessctl
+  - playerctl
+  - mpv
+  - imv
+
+file_manager_packages:
+  - nautilus
+
+font_packages:
+  - ttf-jetbrains-mono-nerd
+  - noto-fonts
+  - noto-fonts-emoji
+
+theme_packages:
+  - nwg-look
+
+qt_packages:
+  - qt5-wayland
+  - qt6-wayland
+
+login_packages:
+  - ly
+
+# AUR packages (installed via yay) — prefer -bin variants to avoid compilation
+aur_hyprland_packages:
+  - hyprpanel-bin
+
+aur_theme_packages:
+  - whitesur-icon-theme
+  - whitesur-gtk-theme
+
+aur_browser_packages:
+  - zen-browser-bin

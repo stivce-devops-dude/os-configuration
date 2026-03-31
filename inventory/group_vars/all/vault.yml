@@ -1,0 +1,3 @@
+---
+# Encrypt this file with: ansible-vault encrypt inventory/group_vars/all/vault.yml
+# vault_become_pass: "CHANGEME"

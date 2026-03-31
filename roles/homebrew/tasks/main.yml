@@ -1,0 +1,34 @@
+---
+- name: Check if Homebrew is installed
+  ansible.builtin.stat:
+    path: /opt/homebrew/bin/brew
+  register: homebrew_check
+  tags:
+    - homebrew
+
+- name: Check if Homebrew is installed (Intel Mac)
+  ansible.builtin.stat:
+    path: /usr/local/bin/brew
+  register: homebrew_check_intel
+  when: not homebrew_check.stat.exists
+  tags:
+    - homebrew
+
+- name: Install Homebrew
+  ansible.builtin.shell: |
+    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  args:
+    creates: /opt/homebrew/bin/brew
+  become: false
+  when:
+    - not homebrew_check.stat.exists
+    - homebrew_check_intel.stat is not defined or not homebrew_check_intel.stat.exists
+  tags:
+    - homebrew
+
+- name: Update Homebrew
+  community.general.homebrew:
+    update_homebrew: true
+  become: false
+  tags:
+    - homebrew

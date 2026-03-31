@@ -1,0 +1,25 @@
+---
+- name: Apply macOS defaults
+  community.general.osx_defaults:
+    domain: "{{ item.domain }}"
+    key: "{{ item.key }}"
+    type: "{{ item.type }}"
+    value: "{{ item.value }}"
+    state: present
+  loop: "{{ macos_defaults }}"
+  loop_control:
+    label: "{{ item.domain }} {{ item.key }}"
+  become: false
+  notify:
+    - Restart Dock
+    - Restart Finder
+  tags:
+    - macos-defaults
+
+- name: Disable Gatekeeper (optional)
+  ansible.builtin.command: spctl --master-disable
+  changed_when: false
+  become: true
+  tags:
+    - macos-defaults
+    - never

@@ -1,0 +1,139 @@
+---
+macos_defaults:
+  # Dock
+  - domain: com.apple.dock
+    key: autohide
+    type: bool
+    value: "true"
+  - domain: com.apple.dock
+    key: autohide-delay
+    type: float
+    value: "0"
+  - domain: com.apple.dock
+    key: autohide-time-modifier
+    type: float
+    value: "0.3"
+  - domain: com.apple.dock
+    key: tilesize
+    type: int
+    value: "48"
+  - domain: com.apple.dock
+    key: magnification
+    type: bool
+    value: "false"
+  - domain: com.apple.dock
+    key: show-recents
+    type: bool
+    value: "false"
+  - domain: com.apple.dock
+    key: minimize-to-application
+    type: bool
+    value: "true"
+  - domain: com.apple.dock
+    key: launchanim
+    type: bool
+    value: "false"
+
+  # Finder
+  - domain: com.apple.finder
+    key: AppleShowAllFiles
+    type: bool
+    value: "true"
+  - domain: com.apple.finder
+    key: ShowPathbar
+    type: bool
+    value: "true"
+  - domain: com.apple.finder
+    key: ShowStatusBar
+    type: bool
+    value: "true"
+  - domain: com.apple.finder
+    key: FXPreferredViewStyle
+    type: string
+    value: "Nlsv"
+  - domain: com.apple.finder
+    key: FXDefaultSearchScope
+    type: string
+    value: "SCcf"
+  - domain: com.apple.finder
+    key: FXEnableExtensionChangeWarning
+    type: bool
+    value: "false"
+  - domain: com.apple.finder
+    key: _FXShowPosixPathInTitle
+    type: bool
+    value: "true"
+
+  # Global / NSGlobalDomain
+  - domain: NSGlobalDomain
+    key: AppleShowAllExtensions
+    type: bool
+    value: "true"
+  - domain: NSGlobalDomain
+    key: NSAutomaticSpellingCorrectionEnabled
+    type: bool
+    value: "false"
+  - domain: NSGlobalDomain
+    key: NSAutomaticCapitalizationEnabled
+    type: bool
+    value: "false"
+  - domain: NSGlobalDomain
+    key: NSAutomaticPeriodSubstitutionEnabled
+    type: bool
+    value: "false"
+  - domain: NSGlobalDomain
+    key: NSAutomaticDashSubstitutionEnabled
+    type: bool
+    value: "false"
+  - domain: NSGlobalDomain
+    key: NSAutomaticQuoteSubstitutionEnabled
+    type: bool
+    value: "false"
+  - domain: NSGlobalDomain
+    key: KeyRepeat
+    type: int
+    value: "2"
+  - domain: NSGlobalDomain
+    key: InitialKeyRepeat
+    type: int
+    value: "15"
+  - domain: NSGlobalDomain
+    key: AppleInterfaceStyle
+    type: string
+    value: "Dark"
+
+  # Trackpad
+  - domain: com.apple.driver.AppleBluetoothMultitouch.trackpad
+    key: Clicking
+    type: bool
+    value: "true"
+  - domain: com.apple.AppleMultitouchTrackpad
+    key: Clicking
+    type: bool
+    value: "true"
+
+  # Screenshots
+  - domain: com.apple.screencapture
+    key: location
+    type: string
+    value: "~/Pictures/Screenshots"
+  - domain: com.apple.screencapture
+    key: type
+    type: string
+    value: "png"
+  - domain: com.apple.screencapture
+    key: disable-shadow
+    type: bool
+    value: "true"
+
+  # Mission Control
+  - domain: com.apple.dock
+    key: mru-spaces
+    type: bool
+    value: "false"
+
+  # Menu bar clock
+  - domain: com.apple.menuextra.clock
+    key: DateFormat
+    type: string
+    value: "EEE d MMM HH:mm"

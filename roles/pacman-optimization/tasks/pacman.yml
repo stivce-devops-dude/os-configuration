@@ -1,0 +1,56 @@
+---
+- name: Check if multilib is enabled
+  ansible.builtin.command: grep '^\[multilib\]' /etc/pacman.conf
+  register: multilib_check
+  changed_when: false
+  failed_when: false
+
+- name: Enable multilib repository
+  ansible.builtin.shell: |
+    sed -i '/^#\[multilib\]/{s/^#//;n;s/^#//}' /etc/pacman.conf
+  args:
+    executable: /bin/bash
+  when: multilib_check.rc != 0
+  changed_when: true
+
+- name: Update pacman cache after enabling multilib
+  community.general.pacman:
+    update_cache: true
+  when: multilib_check.rc != 0
+
+- name: Enable parallel downloads
+  ansible.builtin.lineinfile:
+    path: /etc/pacman.conf
+    regexp: "^#?ParallelDownloads"
+    line: "ParallelDownloads = 10"
+    state: present
+
+- name: Enable color
+  ansible.builtin.lineinfile:
+    path: /etc/pacman.conf
+    regexp: "^#?Color"
+    line: "Color"
+    state: present
+
+- name: Enable verbose package lists
+  ansible.builtin.lineinfile:
+    path: /etc/pacman.conf
+    regexp: "^#?VerbosePkgLists"
+    line: "VerbosePkgLists"
+    state: present
+
+- name: Refresh pacman database
+  community.general.pacman:
+    update_cache: true
+
+- name: Install paccache timer
+  community.general.pacman:
+    name: pacman-contrib
+    state: present
+
+- name: Enable paccache.timer
+  ansible.builtin.systemd:
+    name: paccache.timer
+    enabled: true
+    state: started
+  when: not ansible_check_mode

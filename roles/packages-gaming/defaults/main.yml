@@ -1,0 +1,28 @@
+---
+gaming_wine_packages:
+  - wine-staging
+  - winetricks
+
+gaming_wine_lib_packages:
+  - lib32-gnutls
+  - lib32-libldap
+  - lib32-libgpg-error
+  - lib32-sqlite
+  - lib32-libpulse
+  - lib32-alsa-plugins
+  - python-protobuf
+
+gaming_tool_packages:
+  - gamescope
+  - xorg-xwayland
+  - gamemode
+  - mangohud
+
+# Requires multilib
+gaming_multilib_packages:
+  - steam
+  - lib32-mesa
+
+# AUR packages
+gaming_aur_packages:
+  - umu-launcher

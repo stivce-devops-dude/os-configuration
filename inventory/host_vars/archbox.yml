@@ -1,0 +1,6 @@
+---
+# Per-host overrides for archbox
+ansible_host: 10.0.0.133
+use_nvidia_dkms: true
+# enable_nvidia: true
+# enable_amd: false

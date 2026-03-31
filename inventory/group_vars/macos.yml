@@ -1,0 +1,26 @@
+---
+ansible_connection: local
+ansible_become_pass: "{{ vault_become_pass | default(omit) }}"
+
+homebrew_formulas_extra:
+  - openconnect
+
+homebrew_casks:
+  - zen-browser
+  - nordvpn
+  - lulu
+  - raycast
+  - arc
+  - nikitabobko/tap/aerospace
+  - ubersicht
+  - caffeine
+  - displaylink
+  - hammerspoon
+  - telegram
+  - whatsapp
+  - microsoft-teams
+  - signal
+  - webex
+  - windows-app
+  - iina
+  - karabiner-elements

@@ -1,0 +1,23 @@
+---
+- name: Set GRUB resolution
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: "^#?GRUB_GFXMODE="
+    line: "GRUB_GFXMODE=3840x2160"
+    mode: '0644'
+  notify: Regenerate GRUB config
+
+- name: Set GRUB GFXPAYLOAD
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: "^#?GRUB_GFXPAYLOAD_LINUX="
+    line: "GRUB_GFXPAYLOAD_LINUX=keep"
+    mode: '0644'
+  notify: Regenerate GRUB config
+
+- name: Reduce GRUB timeout
+  ansible.builtin.replace:
+    path: /etc/default/grub
+    regexp: "^GRUB_TIMEOUT=.*"
+    replace: "GRUB_TIMEOUT=1"
+  notify: Regenerate GRUB config

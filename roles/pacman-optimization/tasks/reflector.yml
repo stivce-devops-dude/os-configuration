@@ -1,0 +1,25 @@
+---
+- name: Install reflector
+  community.general.pacman:
+    name: reflector
+    state: present
+
+- name: Run reflector to update mirrorlist
+  ansible.builtin.command: >
+    reflector
+    {% for country in reflector_countries %}
+    --country "{{ country }}"
+    {% endfor %}
+    --protocol https
+    --sort rate
+    --latest 10
+    --save /etc/pacman.d/mirrorlist
+  changed_when: true
+  when: not ansible_check_mode
+
+- name: Enable reflector.timer
+  ansible.builtin.systemd:
+    name: reflector.timer
+    enabled: true
+    state: started
+  when: not ansible_check_mode

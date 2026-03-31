@@ -1,0 +1,11 @@
+---
+- name: Install AMD GPU packages
+  community.general.pacman:
+    name: "{{ amd_packages }}"
+    state: present
+
+- name: Install AMD lib32 packages (requires multilib)
+  community.general.pacman:
+    name: "{{ amd_lib32_packages }}"
+    state: present
+  when: not ansible_check_mode

@@ -1,0 +1,93 @@
+---
+- name: Set MAKEFLAGS for parallel compilation
+  ansible.builtin.lineinfile:
+    path: /etc/makepkg.conf
+    regexp: '^#?MAKEFLAGS='
+    line: 'MAKEFLAGS="-j{{ makepkg_jobs }}"'
+    state: present
+  tags:
+    - makepkg
+
+- name: Set BUILDDIR to tmpfs
+  ansible.builtin.lineinfile:
+    path: /etc/makepkg.conf
+    regexp: '^#?BUILDDIR='
+    line: 'BUILDDIR={{ makepkg_builddir }}'
+    state: present
+  tags:
+    - makepkg
+
+- name: Add -march=native to CFLAGS
+  ansible.builtin.replace:
+    path: /etc/makepkg.conf
+    regexp: '^(CFLAGS=".*?)(")'
+    replace: '\1 -march=native\2'
+  when:
+    - makepkg_native_march | bool
+  register: cflags_result
+  tags:
+    - makepkg
+
+- name: Ensure -march=native is not duplicated in CFLAGS
+  ansible.builtin.replace:
+    path: /etc/makepkg.conf
+    regexp: '(-march=native\s*)+'
+    replace: '-march=native '
+  when: makepkg_native_march | bool
+  tags:
+    - makepkg
+
+- name: Add -march=native to CXXFLAGS
+  ansible.builtin.replace:
+    path: /etc/makepkg.conf
+    regexp: '^(CXXFLAGS=".*?)(")'
+    replace: '\1 -march=native\2'
+  when:
+    - makepkg_native_march | bool
+  tags:
+    - makepkg
+
+- name: Ensure -march=native is not duplicated in CXXFLAGS
+  ansible.builtin.replace:
+    path: /etc/makepkg.conf
+    regexp: '(-march=native\s*)+'
+    replace: '-march=native '
+  when: makepkg_native_march | bool
+  tags:
+    - makepkg
+
+- name: Set RUSTFLAGS for native CPU
+  ansible.builtin.lineinfile:
+    path: /etc/makepkg.conf
+    regexp: '^#?RUSTFLAGS='
+    line: 'RUSTFLAGS="-C opt-level=2 -C target-cpu=native"'
+    state: present
+  when: makepkg_native_march | bool
+  tags:
+    - makepkg
+
+- name: Set multi-threaded zstd compression
+  ansible.builtin.lineinfile:
+    path: /etc/makepkg.conf
+    regexp: '^#?COMPRESSZST='
+    line: "COMPRESSZST=(zstd -c -T{{ makepkg_zstd_threads }} -)"
+    state: present
+  tags:
+    - makepkg
+
+- name: Install ccache
+  community.general.pacman:
+    name: ccache
+    state: present
+  when: makepkg_ccache | bool
+  tags:
+    - makepkg
+
+- name: Enable ccache in BUILDENV
+  ansible.builtin.replace:
+    path: /etc/makepkg.conf
+    regexp: '!ccache'
+    replace: 'ccache'
+  when: makepkg_ccache | bool
+  tags:
+    - makepkg

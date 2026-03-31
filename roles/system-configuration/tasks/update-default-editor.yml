@@ -1,0 +1,21 @@
+---
+- name: Ensure neovim is installed
+  community.general.pacman:
+    name: neovim
+    state: present
+
+- name: Set EDITOR=nvim in /etc/environment
+  ansible.builtin.lineinfile:
+    path: /etc/environment
+    regexp: "^EDITOR="
+    line: "EDITOR=nvim"
+    create: true
+    mode: '0644'
+
+- name: Set EDITOR in /etc/profile.d/editor.sh
+  ansible.builtin.copy:
+    dest: /etc/profile.d/editor.sh
+    content: "export EDITOR=nvim\n"
+    owner: root
+    group: root
+    mode: '0644'

@@ -1,0 +1,19 @@
+---
+# Packages from shared_packages that must be installed as Homebrew casks on macOS
+homebrew_cask_packages:
+  - kitty
+
+# Packages with different names on macOS (Homebrew) vs Arch (pacman)
+package_name_map:
+  git-delta:
+    darwin: delta
+    archlinux: git-delta
+  python3:
+    darwin: python3
+    archlinux: python
+  fd:
+    darwin: fd
+    archlinux: fd
+  gh:
+    darwin: gh
+    archlinux: github-cli

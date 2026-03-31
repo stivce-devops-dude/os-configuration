@@ -1,0 +1,66 @@
+---
+# --- macOS: Homebrew ---
+- name: Install shared packages via Homebrew formulas
+  community.general.homebrew:
+    name: "{{ package_name_map[item]['darwin'] | default(item) }}"
+    state: present
+  loop: "{{ shared_packages | difference(homebrew_cask_packages) }}"
+  become: false
+  when: ansible_os_family == "Darwin"
+  tags:
+    - packages
+
+- name: Install shared cask packages via Homebrew casks
+  community.general.homebrew_cask:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ homebrew_cask_packages }}"
+  become: false
+  when: ansible_os_family == "Darwin"
+  tags:
+    - packages
+
+- name: Install extra Homebrew formulas
+  community.general.homebrew:
+    name: "{{ homebrew_formulas_extra }}"
+    state: present
+  become: false
+  when:
+    - ansible_os_family == "Darwin"
+    - homebrew_formulas_extra is defined
+    - homebrew_formulas_extra | length > 0
+  tags:
+    - packages
+
+- name: Install Homebrew casks
+  community.general.homebrew_cask:
+    name: "{{ homebrew_casks }}"
+    state: present
+  become: false
+  when:
+    - ansible_os_family == "Darwin"
+    - homebrew_casks is defined
+    - homebrew_casks | length > 0
+  tags:
+    - packages
+
+# --- Arch Linux: pacman ---
+- name: Install shared packages via pacman
+  community.general.pacman:
+    name: "{{ package_name_map[item]['archlinux'] | default(item) }}"
+    state: present
+  loop: "{{ shared_packages }}"
+  when: ansible_os_family == "Archlinux"
+  tags:
+    - packages
+
+- name: Install Arch base packages via pacman
+  community.general.pacman:
+    name: "{{ arch_base_packages }}"
+    state: present
+  when:
+    - ansible_os_family == "Archlinux"
+    - arch_base_packages is defined
+    - arch_base_packages | length > 0
+  tags:
+    - packages

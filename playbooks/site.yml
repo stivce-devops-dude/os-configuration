@@ -1,0 +1,6 @@
+---
+- name: Import macOS playbook
+  ansible.builtin.import_playbook: macos.yml
+
+- name: Import Arch Linux playbook
+  ansible.builtin.import_playbook: archlinux.yml

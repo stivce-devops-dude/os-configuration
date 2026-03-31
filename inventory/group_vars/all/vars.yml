@@ -1,0 +1,37 @@
+---
+user: sn0w
+timezone: Europe/Vienna
+
+home_directories:
+  - Projects
+  - Downloads
+  - Documents
+  - Pictures/Wallpapers
+  - Pictures/Screenshots
+  - Pictures/Icons
+  - Music
+  - Videos
+  - Public
+  - Templates
+  - Desktop
+
+shared_packages:
+  - zsh
+  - tree
+  - git
+  - gh
+  - neovim
+  - tmux
+  - fastfetch
+  - jq
+  - btop
+  - bat
+  - eza
+  - ripgrep
+  - fd
+  - kitty
+  - starship
+  - fzf
+  - git-delta
+  - python3
+  - ansible

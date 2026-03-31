@@ -1,0 +1,12 @@
+---
+- name: Install ly display manager
+  community.general.pacman:
+    name: "{{ login_packages }}"
+    state: present
+
+- name: Enable ly display manager on tty2
+  ansible.builtin.systemd:
+    name: "ly@tty2.service"
+    enabled: true
+    state: started
+  when: not ansible_check_mode

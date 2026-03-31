@@ -1,0 +1,23 @@
+---
+hostname: archbox
+ansible_become_pass: "{{ vault_become_pass | default(omit) }}"
+
+enable_nvidia: false
+enable_amd: false
+
+arch_base_packages:
+  - base-devel
+  - plocate
+  - wget
+  - curl
+  - unzip
+  - udisks2
+  - udiskie
+  - gvfs
+  - tumbler
+  - polkit
+  - openssh
+  - man-db
+  - zsh-autosuggestions
+  - zsh-syntax-highlighting
+  - networkmanager

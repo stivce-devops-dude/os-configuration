@@ -1,0 +1,6 @@
+---
+- name: Restart ly
+  ansible.builtin.systemd:
+    name: "ly@tty2.service"
+    state: restarted
+    enabled: true

@@ -1,0 +1,11 @@
+---
+- name: Configure reflector mirrors
+  ansible.builtin.import_tasks: reflector.yml
+  tags:
+    - pacman
+    - reflector
+
+- name: Optimize pacman configuration
+  ansible.builtin.import_tasks: pacman.yml
+  tags:
+    - pacman

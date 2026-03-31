@@ -1,0 +1,37 @@
+---
+- name: Configure Arch Linux
+  hosts: archlinux
+  become: true
+
+  roles:
+    - role: pacman-optimization
+      tags: [arch, pacman]
+
+    - role: makepkg-optimization
+      tags: [arch, makepkg]
+
+    - role: system-configuration
+      tags: [arch, system]
+
+    - role: bootstrap-deps
+      tags: [arch, aur]
+
+    - role: boot-optimization
+      tags: [arch, boot]
+
+    - role: common
+      tags: [arch, directories]
+
+    - role: packages-base
+      tags: [arch, packages]
+
+    - role: gpu
+      tags: [arch, gpu]
+      when: enable_nvidia | bool or enable_amd | bool
+
+    - role: packages-hyprland
+      tags: [arch, hyprland]
+
+    - role: packages-gaming
+      tags: [arch, gaming]
+      when: "'gaming' in group_names"

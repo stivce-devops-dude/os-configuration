@@ -1,0 +1,21 @@
+---
+- name: Configure macOS
+  hosts: macos
+  connection: local
+  become: false
+
+  roles:
+    - role: macos-update
+      tags: [macos, update]
+
+    - role: homebrew
+      tags: [macos, homebrew]
+
+    - role: macos-defaults
+      tags: [macos, defaults]
+
+    - role: common
+      tags: [macos, directories]
+
+    - role: packages-base
+      tags: [macos, packages]

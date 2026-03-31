@@ -1,0 +1,48 @@
+---
+- name: Update system
+  ansible.builtin.import_tasks: update-system.yml
+  tags:
+    - system
+    - update
+
+- name: Set hostname
+  ansible.builtin.import_tasks: update-hostname.yml
+  tags:
+    - system
+    - hostname
+
+- name: Set timezone
+  ansible.builtin.import_tasks: update-timezone.yml
+  tags:
+    - system
+    - timezone
+
+- name: Set default editor
+  ansible.builtin.import_tasks: update-default-editor.yml
+  tags:
+    - system
+    - editor
+
+- name: Set default shell
+  ansible.builtin.import_tasks: update-shell.yml
+  tags:
+    - system
+    - shell
+
+- name: Harden SSH
+  ansible.builtin.import_tasks: update-ssh.yml
+  tags:
+    - system
+    - ssh
+
+- name: Configure sudo
+  ansible.builtin.import_tasks: update-sudo.yml
+  tags:
+    - system
+    - sudo
+
+- name: Configure GRUB
+  ansible.builtin.import_tasks: update-grub.yml
+  tags:
+    - system
+    - grub

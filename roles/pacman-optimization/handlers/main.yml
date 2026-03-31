@@ -1,0 +1,6 @@
+---
+- name: Restart paccache.timer
+  ansible.builtin.systemd:
+    name: paccache.timer
+    state: restarted
+    enabled: true

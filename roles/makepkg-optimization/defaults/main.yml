@@ -1,0 +1,15 @@
+---
+# Build in RAM (tmpfs) — major I/O speedup
+makepkg_builddir: /tmp/makepkg
+
+# Use all CPU cores for compilation
+makepkg_jobs: "$(nproc)"
+
+# Enable ccache for faster rebuilds
+makepkg_ccache: true
+
+# Optimize for the host CPU (not portable — fine for local builds)
+makepkg_native_march: true
+
+# Multi-threaded zstd compression for packages
+makepkg_zstd_threads: 0  # 0 = auto (all cores)
