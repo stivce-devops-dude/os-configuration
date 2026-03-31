@@ -39,6 +39,7 @@ file_manager_packages:
 
 font_packages:
   - ttf-jetbrains-mono-nerd
+  - ttf-liberation
   - noto-fonts
   - noto-fonts-emoji
 

@@ -1,0 +1,31 @@
+---
+name: Syntax Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  syntax-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install ansible
+          ansible-galaxy collection install -r requirements.yml
+
+      - name: Syntax check — Arch playbook
+        run: ansible-playbook playbooks/archlinux.yml --syntax-check
+
+      - name: Syntax check — macOS playbook
+        run: ansible-playbook playbooks/macos.yml --syntax-check

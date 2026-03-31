@@ -1,5 +1,9 @@
 # os-configuration
 
+![yamllint](https://github.com/stivce-devops-dude/os-configuration/actions/workflows/yamllint.yml/badge.svg)
+![ansible-lint](https://github.com/stivce-devops-dude/os-configuration/actions/workflows/ansible-lint.yml/badge.svg)
+![Syntax Check](https://github.com/stivce-devops-dude/os-configuration/actions/workflows/syntax-check.yml/badge.svg)
+
 Ansible project for configuring macOS and Arch Linux machines from a single codebase. macOS runs locally (`connection: local`), Arch Linux runs over SSH.
 
 ## Prerequisites
@@ -14,7 +18,18 @@ Ansible project for configuring macOS and Arch Linux machines from a single code
 - User in `wheel` group with passwordless sudo
 - NetworkManager and sshd enabled
 
-> Use the companion [arch.install](https://github.com/stivce-devops-dude/arch.install) script to bootstrap a fresh Arch install that meets these requirements.
+#### Fresh Arch install
+
+Use the companion [arch.install](https://github.com/stivce-devops-dude/arch.install) script from the Arch live ISO:
+
+```bash
+pacman -Sy git
+git clone https://github.com/stivce-devops-dude/arch.install.git
+cd arch.install
+bash install
+```
+
+This sets up disk partitioning, base system, bootloader, user creation, and SSH — everything needed for the Ansible playbook to connect after reboot.
 
 ## Quick start
 
