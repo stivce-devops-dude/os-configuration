@@ -24,6 +24,9 @@ jobs:
           pip install ansible
           ansible-galaxy collection install -r requirements.yml
 
+      - name: Create dummy vault password file
+        run: echo "ci-placeholder" > .vault_pass
+
       - name: Syntax check — Arch playbook
         run: ansible-playbook playbooks/archlinux.yml --syntax-check
 

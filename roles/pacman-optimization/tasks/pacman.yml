@@ -5,7 +5,7 @@
   changed_when: false
   failed_when: false
 
-- name: Enable multilib repository
+- name: Enable multilib repository # noqa: command-instead-of-module
   ansible.builtin.shell: |
     sed -i '/^#\[multilib\]/{s/^#//;n;s/^#//}' /etc/pacman.conf
   args:
