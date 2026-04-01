@@ -24,3 +24,4 @@ homebrew_casks:
   - windows-app
   - iina
   - karabiner-elements
+  - localsend

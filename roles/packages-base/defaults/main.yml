@@ -17,3 +17,7 @@ package_name_map:
   gh:
     darwin: gh
     archlinux: github-cli
+
+# AUR packages for Arch (shared apps not in official repos)
+arch_aur_packages:
+  - localsend-bin

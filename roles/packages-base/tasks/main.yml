@@ -64,3 +64,17 @@
     - arch_base_packages | length > 0
   tags:
     - packages
+
+- name: Install shared AUR packages
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.command: "yay -S --noconfirm --needed {{ arch_aur_packages | join(' ') }}"
+  register: aur_base_result
+  changed_when: "'installing' in aur_base_result.stdout"
+  when:
+    - ansible_os_family == "Archlinux"
+    - arch_aur_packages is defined
+    - arch_aur_packages | length > 0
+    - not ansible_check_mode
+  tags:
+    - packages
