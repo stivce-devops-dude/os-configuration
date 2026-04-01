@@ -1,0 +1,9 @@
+---
+dotfiles_shared_repo: "git@github.com:stivce-devops-dude/dotfiles.git"
+dotfiles_shared_dir: ".dotfiles"
+
+dotfiles_os_repo_map:
+  Darwin: "git@github.com:stivce-devops-dude/dotfiles-mac.git"
+  Archlinux: "git@github.com:stivce-devops-dude/dotfiles-arch.git"
+
+dotfiles_os_dir: ".dotfiles-os"

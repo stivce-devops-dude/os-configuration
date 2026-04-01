@@ -1,0 +1,96 @@
+---
+- name: Set home directory path
+  ansible.builtin.set_fact:
+    user_home: "{{ '/Users/' + user if ansible_os_family == 'Darwin' else '/home/' + user }}"
+  tags:
+    - dotfiles
+
+# --- Shared dotfiles ---
+- name: Check if shared dotfiles repo exists
+  ansible.builtin.stat:
+    path: "{{ user_home }}/{{ dotfiles_shared_dir }}/HEAD"
+  register: dotfiles_shared_check
+  tags:
+    - dotfiles
+
+- name: Clone shared dotfiles (bare)
+  ansible.builtin.command: >
+    git clone --bare {{ dotfiles_shared_repo }}
+    {{ user_home }}/{{ dotfiles_shared_dir }}
+  become: true
+  become_user: "{{ user }}"
+  when: not dotfiles_shared_check.stat.exists
+  changed_when: true
+  tags:
+    - dotfiles
+
+- name: Configure shared dotfiles to hide untracked files
+  ansible.builtin.command: >
+    git --git-dir={{ user_home }}/{{ dotfiles_shared_dir }}
+    --work-tree={{ user_home }}
+    config status.showUntrackedFiles no
+  become: true
+  become_user: "{{ user }}"
+  changed_when: false
+  tags:
+    - dotfiles
+
+- name: Checkout shared dotfiles
+  ansible.builtin.command: >
+    git --git-dir={{ user_home }}/{{ dotfiles_shared_dir }}
+    --work-tree={{ user_home }}
+    checkout -f
+  become: true
+  become_user: "{{ user }}"
+  when: not dotfiles_shared_check.stat.exists
+  changed_when: true
+  tags:
+    - dotfiles
+
+# --- OS-specific dotfiles ---
+- name: Set OS-specific dotfiles repo
+  ansible.builtin.set_fact:
+    dotfiles_os_repo: "{{ dotfiles_os_repo_map[ansible_os_family] }}"
+  tags:
+    - dotfiles
+
+- name: Check if OS dotfiles repo exists
+  ansible.builtin.stat:
+    path: "{{ user_home }}/{{ dotfiles_os_dir }}/HEAD"
+  register: dotfiles_os_check
+  tags:
+    - dotfiles
+
+- name: Clone OS dotfiles (bare)
+  ansible.builtin.command: >
+    git clone --bare {{ dotfiles_os_repo }}
+    {{ user_home }}/{{ dotfiles_os_dir }}
+  become: true
+  become_user: "{{ user }}"
+  when: not dotfiles_os_check.stat.exists
+  changed_when: true
+  tags:
+    - dotfiles
+
+- name: Configure OS dotfiles to hide untracked files
+  ansible.builtin.command: >
+    git --git-dir={{ user_home }}/{{ dotfiles_os_dir }}
+    --work-tree={{ user_home }}
+    config status.showUntrackedFiles no
+  become: true
+  become_user: "{{ user }}"
+  changed_when: false
+  tags:
+    - dotfiles
+
+- name: Checkout OS dotfiles
+  ansible.builtin.command: >
+    git --git-dir={{ user_home }}/{{ dotfiles_os_dir }}
+    --work-tree={{ user_home }}
+    checkout -f
+  become: true
+  become_user: "{{ user }}"
+  when: not dotfiles_os_check.stat.exists
+  changed_when: true
+  tags:
+    - dotfiles

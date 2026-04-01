@@ -19,3 +19,6 @@
 
     - role: packages-base
       tags: [macos, packages]
+
+    - role: dotfiles
+      tags: [macos, dotfiles]

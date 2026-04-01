@@ -35,3 +35,6 @@
     - role: packages-gaming
       tags: [arch, gaming]
       when: "'gaming' in group_names"
+
+    - role: dotfiles
+      tags: [arch, dotfiles]
