@@ -35,6 +35,22 @@
   tags:
     - dotfiles
 
+- name: Pull latest shared dotfiles
+  ansible.builtin.shell: >
+    git --git-dir={{ user_home }}/{{ dotfiles_shared_dir }}
+    --work-tree={{ user_home }}
+    fetch origin main &&
+    git --git-dir={{ user_home }}/{{ dotfiles_shared_dir }}
+    --work-tree={{ user_home }}
+    reset --hard FETCH_HEAD
+  become: true
+  become_user: "{{ user }}"
+  register: dotfiles_shared_pull
+  changed_when: "'Already up to date' not in dotfiles_shared_pull.stdout"
+  when: dotfiles_shared_check.stat.exists
+  tags:
+    - dotfiles
+
 - name: Checkout shared dotfiles
   ansible.builtin.command: >
     git --git-dir={{ user_home }}/{{ dotfiles_shared_dir }}
@@ -42,7 +58,6 @@
     checkout -f
   become: true
   become_user: "{{ user }}"
-  when: not dotfiles_shared_check.stat.exists
   changed_when: true
   tags:
     - dotfiles
@@ -83,6 +98,22 @@
   tags:
     - dotfiles
 
+- name: Pull latest OS dotfiles
+  ansible.builtin.shell: >
+    git --git-dir={{ user_home }}/{{ dotfiles_os_dir }}
+    --work-tree={{ user_home }}
+    fetch origin main &&
+    git --git-dir={{ user_home }}/{{ dotfiles_os_dir }}
+    --work-tree={{ user_home }}
+    reset --hard FETCH_HEAD
+  become: true
+  become_user: "{{ user }}"
+  register: dotfiles_os_pull
+  changed_when: "'Already up to date' not in dotfiles_os_pull.stdout"
+  when: dotfiles_os_check.stat.exists
+  tags:
+    - dotfiles
+
 - name: Checkout OS dotfiles
   ansible.builtin.command: >
     git --git-dir={{ user_home }}/{{ dotfiles_os_dir }}
@@ -90,7 +121,6 @@
     checkout -f
   become: true
   become_user: "{{ user }}"
-  when: not dotfiles_os_check.stat.exists
   changed_when: true
   tags:
     - dotfiles
