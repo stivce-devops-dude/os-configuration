@@ -89,3 +89,25 @@
   register: aur_browser_result
   changed_when: "'installing' in aur_browser_result.stdout"
   when: not ansible_check_mode
+
+- name: Deploy Zen Browser policies (auto-install extensions)
+  ansible.builtin.copy:
+    dest: /opt/zen-browser-bin/distribution/policies.json
+    content: |
+      {
+        "policies": {
+          "DisableAppUpdate": true,
+          "ExtensionSettings": {
+            "uBlock0@raymondhill.net": {
+              "installation_mode": "force_installed",
+              "install_url": "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi"
+            },
+            "sponsorBlocker@ajay.app": {
+              "installation_mode": "force_installed",
+              "install_url": "https://addons.mozilla.org/firefox/downloads/latest/sponsorblock/latest.xpi"
+            }
+          }
+        }
+      }
+    mode: "0644"
+  when: not ansible_check_mode
