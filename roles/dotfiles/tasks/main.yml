@@ -124,3 +124,14 @@
   changed_when: true
   tags:
     - dotfiles
+
+- name: Apply Zen Browser preferences
+  ansible.builtin.command: "{{ user_home }}/.local/bin/zen-apply-prefs"
+  become: true
+  become_user: "{{ user }}"
+  when:
+    - ansible_os_family == "Archlinux"
+    - not ansible_check_mode
+  changed_when: true
+  tags:
+    - dotfiles
