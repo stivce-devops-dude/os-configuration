@@ -76,7 +76,8 @@ Edit `inventory/hosts.yml` and `inventory/host_vars/` to match your setup.
 | Role | Description |
 |------|-------------|
 | `common` | Creates standard `$HOME` directories (Projects, Documents, etc.) |
-| `packages-base` | Installs shared CLI tools (neovim, tmux, fzf, ripgrep, etc.) via Homebrew or pacman with cross-platform name mapping |
+| `packages-base` | Installs shared CLI tools (neovim, tmux, fzf, ripgrep, etc.) via Homebrew or pacman with cross-platform name mapping. Includes AUR packages (localsend) on Arch |
+| `dotfiles` | Clones and deploys dotfiles via bare git repos: shared (`dotfiles`) + OS-specific (`dotfiles-arch` or `dotfiles-mac`). Pulls latest on subsequent runs. Applies Zen Browser preferences automatically |
 
 ### macOS only
 | Role | Description |
@@ -94,8 +95,8 @@ Edit `inventory/hosts.yml` and `inventory/host_vars/` to match your setup.
 | `bootstrap-deps` | Installs yay (AUR helper) from source |
 | `boot-optimization` | Masks `systemd-resolved`, disables `NetworkManager-wait-online` |
 | `gpu` | NVIDIA and/or AMD driver stack with DKMS support, GRUB kernel params, initramfs modules |
-| `packages-hyprland` | Full Wayland/Hyprland desktop: compositor, waybar, PipeWire audio, fonts, themes, Qt support, ly display manager |
-| `packages-gaming` | Wine, Steam, gamemode, mangohud, gamescope (tagged `gaming`, opt-in) |
+| `packages-hyprland` | Full Wayland/Hyprland desktop: compositor, waybar, PipeWire audio, fonts, themes, Qt support, ly display manager. Deploys Zen Browser extension policies (uBlock Origin, SponsorBlock) |
+| `packages-gaming` | Wine, Steam, Discord, gamemode, mangohud, gamescope, prismlauncher, wowup (tagged `gaming`, opt-in) |
 
 ## Execution order
 
@@ -105,6 +106,7 @@ Edit `inventory/hosts.yml` and `inventory/host_vars/` to match your setup.
 3. macOS defaults
 4. Home directories
 5. Packages (formulas + casks)
+6. Dotfiles (shared + macOS-specific)
 
 ### Arch Linux
 1. Pacman optimization (mirrors, multilib, parallel downloads)
@@ -113,10 +115,11 @@ Edit `inventory/hosts.yml` and `inventory/host_vars/` to match your setup.
 4. Bootstrap yay
 5. Boot optimization
 6. Home directories
-7. Base packages
+7. Base packages + AUR packages
 8. GPU drivers (conditional: `enable_nvidia` or `enable_amd`)
-9. Hyprland desktop stack
+9. Hyprland desktop stack + Zen Browser policies
 10. Gaming packages (conditional: host in `gaming` group)
+11. Dotfiles (shared + Arch-specific + Zen Browser preferences)
 
 ## Tags
 
@@ -128,6 +131,7 @@ ansible-playbook playbooks/archlinux.yml --tags gpu          # GPU drivers only
 ansible-playbook playbooks/archlinux.yml --tags gaming       # gaming packages only
 ansible-playbook playbooks/archlinux.yml --tags hyprland     # desktop stack only
 ansible-playbook playbooks/archlinux.yml --skip-tags gaming  # everything except gaming
+ansible-playbook playbooks/archlinux.yml --tags dotfiles     # dotfiles only
 ```
 
 ## Vault
@@ -151,4 +155,6 @@ The vault password file path is configured in `ansible.cfg` as `.vault_pass`.
 - **Timezone**: Change `timezone` in `group_vars/all/vars.yml`
 - **Home directories**: Edit `home_directories` list in `group_vars/all/vars.yml`
 - **macOS defaults**: Edit `roles/macos-defaults/defaults/main.yml` to add/remove preferences
-- **AUR packages**: Listed in `roles/packages-hyprland/defaults/main.yml` and `roles/packages-gaming/defaults/main.yml`, prefer `-bin` variants
+- **AUR packages**: Listed in `roles/packages-base/defaults/main.yml`, `roles/packages-hyprland/defaults/main.yml`, and `roles/packages-gaming/defaults/main.yml`, prefer `-bin` variants
+- **Dotfiles**: Repos configured in `roles/dotfiles/defaults/main.yml`
+- **Zen Browser extensions**: Configured in `roles/packages-hyprland/tasks/wayland.yml` (policies.json)
