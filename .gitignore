@@ -1,2 +1,4 @@
 .vault_pass
 *.retry
+*.txt
+conversation.md
