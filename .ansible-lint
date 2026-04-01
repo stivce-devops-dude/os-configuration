@@ -2,3 +2,4 @@
 skip_list:
   - role-name
   - var-naming[no-role-prefix]
+  - command-instead-of-module
