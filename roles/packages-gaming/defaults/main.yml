@@ -26,5 +26,6 @@ gaming_multilib_packages:
 # AUR packages
 gaming_aur_packages:
   - umu-launcher
+  - discord
   - wowup-cf-bin
   - prismlauncher-bin
