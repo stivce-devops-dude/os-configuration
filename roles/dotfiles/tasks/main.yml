@@ -1,7 +1,7 @@
 ---
 - name: Set home directory path
   ansible.builtin.set_fact:
-    user_home: "{{ '/Users/' + user if ansible_os_family == 'Darwin' else '/home/' + user }}"
+    user_home: "{{ lookup('env', 'HOME') if ansible_os_family == 'Darwin' else '/home/' + user }}"
   tags:
     - dotfiles
 
@@ -17,7 +17,7 @@
   ansible.builtin.command: >
     git clone --bare {{ dotfiles_shared_repo }}
     {{ user_home }}/{{ dotfiles_shared_dir }}
-  become: true
+  become: "{{ ansible_os_family != 'Darwin' }}"
   become_user: "{{ user }}"
   when: not dotfiles_shared_check.stat.exists
   changed_when: true
@@ -29,7 +29,7 @@
     git --git-dir={{ user_home }}/{{ dotfiles_shared_dir }}
     --work-tree={{ user_home }}
     config status.showUntrackedFiles no
-  become: true
+  become: "{{ ansible_os_family != 'Darwin' }}"
   become_user: "{{ user }}"
   changed_when: false
   tags:
@@ -43,7 +43,7 @@
     git --git-dir={{ user_home }}/{{ dotfiles_shared_dir }}
     --work-tree={{ user_home }}
     reset --hard FETCH_HEAD
-  become: true
+  become: "{{ ansible_os_family != 'Darwin' }}"
   become_user: "{{ user }}"
   register: dotfiles_shared_pull
   changed_when: "'Already up to date' not in dotfiles_shared_pull.stdout"
@@ -56,7 +56,7 @@
     git --git-dir={{ user_home }}/{{ dotfiles_shared_dir }}
     --work-tree={{ user_home }}
     checkout -f
-  become: true
+  become: "{{ ansible_os_family != 'Darwin' }}"
   become_user: "{{ user }}"
   changed_when: true
   tags:
@@ -80,7 +80,7 @@
   ansible.builtin.command: >
     git clone --bare {{ dotfiles_os_repo }}
     {{ user_home }}/{{ dotfiles_os_dir }}
-  become: true
+  become: "{{ ansible_os_family != 'Darwin' }}"
   become_user: "{{ user }}"
   when: not dotfiles_os_check.stat.exists
   changed_when: true
@@ -92,7 +92,7 @@
     git --git-dir={{ user_home }}/{{ dotfiles_os_dir }}
     --work-tree={{ user_home }}
     config status.showUntrackedFiles no
-  become: true
+  become: "{{ ansible_os_family != 'Darwin' }}"
   become_user: "{{ user }}"
   changed_when: false
   tags:
@@ -106,7 +106,7 @@
     git --git-dir={{ user_home }}/{{ dotfiles_os_dir }}
     --work-tree={{ user_home }}
     reset --hard FETCH_HEAD
-  become: true
+  become: "{{ ansible_os_family != 'Darwin' }}"
   become_user: "{{ user }}"
   register: dotfiles_os_pull
   changed_when: "'Already up to date' not in dotfiles_os_pull.stdout"
@@ -119,7 +119,7 @@
     git --git-dir={{ user_home }}/{{ dotfiles_os_dir }}
     --work-tree={{ user_home }}
     checkout -f
-  become: true
+  become: "{{ ansible_os_family != 'Darwin' }}"
   become_user: "{{ user }}"
   changed_when: true
   tags:
@@ -127,7 +127,7 @@
 
 - name: Apply Zen Browser preferences
   ansible.builtin.command: "{{ user_home }}/.local/bin/zen-apply-prefs"
-  become: true
+  become: "{{ ansible_os_family != 'Darwin' }}"
   become_user: "{{ user }}"
   when:
     - ansible_os_family == "Archlinux"

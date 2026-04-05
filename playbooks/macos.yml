@@ -17,6 +17,9 @@
     - role: common
       tags: [macos, directories]
 
+    - role: macos-sudo
+      tags: [macos, sudo]
+
     - role: packages-base
       tags: [macos, packages]
 

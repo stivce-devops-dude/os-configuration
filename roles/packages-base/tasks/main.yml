@@ -32,10 +32,11 @@
   tags:
     - packages
 
-- name: Install Homebrew casks
+- name: Install Homebrew casks via brew command
   community.general.homebrew_cask:
-    name: "{{ homebrew_casks }}"
+    name: "{{ item }}"
     state: present
+  loop: "{{ homebrew_casks }}"
   become: false
   when:
     - ansible_os_family == "Darwin"

@@ -1,0 +1,17 @@
+---
+- name: Get current user for sudoers
+  ansible.builtin.command: whoami
+  register: current_user
+  changed_when: false
+  tags:
+    - sudo
+
+- name: Update Homebrew sudoers to preserve required env vars
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/homebrew
+    content: |
+      {{ current_user.stdout }} ALL=(ALL) NOPASSWD: ALL
+    mode: "0440"
+  become: true
+  tags:
+    - sudo
